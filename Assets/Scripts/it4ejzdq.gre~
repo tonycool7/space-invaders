@@ -1,0 +1,76 @@
+using System;
+using UnityEngine;
+
+public class Invaders : MonoBehaviour
+{
+    private int movedSteps = 0;
+    private Vector3 screenLeftEdge;
+    private Vector3 screenRightEdge;
+    float magnitude = 0.2f;
+    float timer = 0;
+    float pause = .3f;
+    int MaxSteps = 11;
+
+    public Invader[] invaders;
+    public int rows = 5;
+    public int columns = 10;
+    public float padding = 1f;
+
+    private void Awake()
+    {
+        screenLeftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
+        screenRightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
+
+        for(int i = 0; i < invaders.Length; i++)
+        {
+            float width = padding * (columns - 1);
+            float heigth = padding * (rows - 1);
+            Vector2 centering = new Vector2(-width / 1.3f, heigth / 1.5f);
+            Vector3 rowPosition = new Vector3(centering.x, centering.y + (i * padding), 0);
+
+            for(int j = 0; j < columns; j++)
+            {
+                Invader invader = Instantiate(this.invaders[i], transform);
+                rowPosition.x += padding;
+                invader.transform.position = rowPosition;
+            }
+        }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        /*timer += Time.deltaTime;
+
+        if (timer >= pause)
+        {
+            transform.Translate(new Vector3(magnitude, 0, 0));
+            movedSteps += 1;
+            timer = 0;
+        }
+
+        if (movedSteps >= MaxSteps)
+        {
+            transform.Translate(new Vector3(0, -0.3f, 0));
+            movedSteps = 0;
+            magnitude = -magnitude;
+        }*/
+
+        if(transform.position.x >= screenLeftEdge.x)
+        {
+            transform.Translate(new Vector3(0, -0.3f, 0));
+            magnitude = -magnitude;
+        }else if(transform.position.x < screenLeftEdge.x)
+        {
+            transform.Translate(new Vector3(0, -0.3f, 0));
+            magnitude = Math.Abs(magnitude);
+        }
+
+    }
+}
