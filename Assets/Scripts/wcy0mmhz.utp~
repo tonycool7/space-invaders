@@ -14,10 +14,11 @@ public class Projectile : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(_playerLaserDestroyed != null)
+        if(collision.gameObject.tag == "bunker")
         {
-            this._playerLaserDestroyed.Invoke();
+            print(""da");
         }
+        this._playerLaserDestroyed.Invoke();
         Destroy(gameObject);
     }
 }
