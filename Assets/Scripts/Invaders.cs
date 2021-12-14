@@ -16,7 +16,6 @@ public class Invaders : MonoBehaviour
 
     public int rows => this.invaders.Length;
     public int numberKilled { get; private set; }
-
     public int totatInvaders => rows * this.columns;
     public int numberAlive => this.totatInvaders - this.numberKilled;
 
