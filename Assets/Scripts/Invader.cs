@@ -11,6 +11,7 @@ public class Invader : MonoBehaviour
     public Sprite[] animations;
     public float animationTime = 1.0f;
     public System.Action killed;
+    public System.Action enemyHitBoundary;
 
     private void Awake()
     {
@@ -41,5 +42,7 @@ public class Invader : MonoBehaviour
             killed.Invoke();
             Destroy(gameObject);
         }
-    }
+
+        if (collision.gameObject.tag == "boundary") enemyHitBoundary.Invoke();
+    } 
 }

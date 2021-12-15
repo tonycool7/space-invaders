@@ -21,6 +21,7 @@ public class Invaders : MonoBehaviour
 
     public float percentKilled => (float)this.numberKilled / (float)this.totatInvaders;
 
+    //this function creates enemy ships on in the scene
     private void Awake()
     {
         for(int i = 0; i < rows; i++)
@@ -34,6 +35,7 @@ public class Invaders : MonoBehaviour
             {
                 Invader invader = Instantiate(this.invaders[i], transform);
                 invader.killed += InvaderKilled;
+                invader.enemyHitBoundary += ReloadScene;
                 rowPosition.x += padding;
                 invader.transform.position = rowPosition;
             }
@@ -41,27 +43,29 @@ public class Invaders : MonoBehaviour
     }
 
     // Start is called before the first frame update
+    // we loop the shooting action of the enemy
     void Start()
     {
         InvokeRepeating(nameof(MissileAttack), missileAttackRate, missileAttackRate);
     }
 
     // Update is called once per frame
+    // on every new frame, we move the enemy fleet from left to right, and right to left
+    // and also increase the speed of the enemy with respect to the number of enemy ships available
     void Update()
     {
         transform.position += _direction * speed.Evaluate(this.percentKilled) * Time.deltaTime;
 
         Vector3 screenLeftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
         Vector3 screenRightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
-        Vector3 screenBottomEdge = Camera.main.ViewportToWorldPoint(Vector3.down);
 
         foreach (Transform invader in transform)
         {
             if (!invader.gameObject.activeInHierarchy) continue;
 
-            if (_direction == Vector3.right && invader.position.x >= (screenRightEdge.x - 0.4f)) moveToNextRow();
+            if (_direction == Vector3.right && invader.position.x >= (screenRightEdge.x - 0.4f)) MoveToNextRow();
 
-            else if (_direction == Vector3.left && invader.position.x <= (screenLeftEdge.x + 0.4f)) moveToNextRow();
+            else if (_direction == Vector3.left && invader.position.x <= (screenLeftEdge.x + 0.4f)) MoveToNextRow();
         }
     }
 
@@ -77,7 +81,7 @@ public class Invaders : MonoBehaviour
         if (numberKilled >= totatInvaders) ReloadScene();
     }
 
-    void moveToNextRow()
+    void MoveToNextRow()
     {
         _direction.x *= -1.0f;
         Vector3 position = transform.position;
@@ -95,7 +99,7 @@ public class Invaders : MonoBehaviour
 
             if (rnNum < (1.0f / (float)this.numberAlive))
             {
-                Projectile enemyLaser = Instantiate(missile, invader.gameObject.transform.position, Quaternion.identity);
+                Instantiate(missile, invader.gameObject.transform.position, Quaternion.identity);
 
                 break;
             }
